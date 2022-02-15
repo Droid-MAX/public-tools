@@ -1,12 +1,14 @@
 ﻿#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import sys
 import time
 import serial
 import serial.tools.list_ports
 
 port_list = list(serial.tools.list_ports.comports())
 if len(port_list) <= 0:
-    print("The serial port not found!")
+    print("[-] The serial port device not found!")
+    sys.exit(1)
 else:
     try:
         plist = list(port_list[0])
@@ -19,11 +21,12 @@ else:
         bytesize = serial.EIGHTBITS,
         timeout = 1
         )
-        print("Serial Port:", ser.name)
+        print("[+] Use serial port device:", ser.name)
 
+        print("[+] Wait for trigger signal...")
         while(1):
             if (ser.inWaiting() != 0):
-                print("Start send command...")
+                print("[+] Start send command...")
                 ser.write(chr(0x03).encode())
                 time.sleep(1)
                 ser.write('setenv ipaddr 192.168.1.10\n'.encode())
@@ -35,10 +38,11 @@ else:
                 ser.write('save\n'.encode())
                 time.sleep(3)
                 ser.write('run update_openwrt\n'.encode())
-                print("Command send complete...")
+                print("[+] Command send complete!")
                 break
 
         ser.close()
+        sys.exit(0)
 
     except Exception as e:
-        print("Error:", e)
+        print("[!] Error:", e)
