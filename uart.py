@@ -25,7 +25,8 @@ else:
 
         print("[+] Wait for trigger signal...")
         while(1):
-            if (ser.inWaiting() != 0):
+            recv = ser.readline().decode()
+            if recv.startswith('U-Boot'):
                 print("[+] Start send command...")
                 ser.write(chr(0x03).encode())
                 time.sleep(1)
@@ -46,3 +47,4 @@ else:
 
     except Exception as e:
         print("[!] Error:", e)
+        sys.exit(-1)
