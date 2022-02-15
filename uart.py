@@ -23,11 +23,11 @@ else:
         )
         print("[+] Use serial port device:", ser.name)
 
-        print("[+] Wait for trigger signal...")
+        print("[+] Wait for trigger code...")
         while(1):
             recv = ser.readline().decode()
             if recv.startswith('U-Boot'):
-                print("[+] Start send command...")
+                print("[+] Received! send command...")
                 t_end = time.time() + 3
                 while time.time() < t_end:
                     ser.write(chr(0x03).encode())
