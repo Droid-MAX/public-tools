@@ -28,7 +28,9 @@ else:
             recv = ser.readline().decode()
             if recv.startswith('U-Boot'):
                 print("[+] Start send command...")
-                ser.write(chr(0x03).encode())
+                t_end = time.time() + 3
+                while time.time() < t_end:
+                    ser.write(chr(0x03).encode())
                 time.sleep(1)
                 ser.write('setenv ipaddr 192.168.1.10\n'.encode())
                 time.sleep(1)
