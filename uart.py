@@ -36,7 +36,7 @@ else:
                 time.sleep(1)
                 ser.write('setenv serverip 192.168.1.2\n'.encode())
                 time.sleep(1)
-                ser.write('setenv image_name firmware.bin\n'.encode())
+                ser.write('setenv image_name firmware\n'.encode())
                 time.sleep(1)
                 ser.write('save\n'.encode())
                 time.sleep(3)
