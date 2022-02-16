@@ -40,7 +40,7 @@ else:
                 time.sleep(1)
                 ser.write('save\n'.encode())
                 time.sleep(3)
-                ser.write('run update_openwrt\n'.encode())
+                ser.write('run update_openwrt; reset\n'.encode())
                 print("[+] Command send complete!")
                 break
 
