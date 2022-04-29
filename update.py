@@ -10,8 +10,10 @@ if len(port_list) <= 0:
     sys.exit("[!] The serial port device not found!")
 else:
     try:
-        plist = list(port_list[0])
-        serialName = plist[0]
+        for i in range(len(port_list)):
+            plist = list(port_list[i])
+            print(plist)
+        serialName = input('Please Input SerialNum: ')
         ser = serial.Serial(
         port = serialName,
         baudrate = 115200,
