@@ -1,45 +1,42 @@
-#!/bin/sh
+#!/system/bin/sh
+export PATH=/sbin:/system/sbin:/system/bin:/system/xbin
 
-PATH=/usr/local/sbin:/usr/sbin:/sbin:$PATH
-
-if [ $EUID != 0 ]; then
-  sudo "$0" "$@"
-  exit $?
-fi
-
-EXEC_NAME="udpsvd"
+DAEMON_NAME="udpsvd"
 ADDR="0.0.0.0"
 PORT="69"
-NAME="tftpd"
-DIR=$2
-EXEC_OPT="-vE $ADDR $PORT $NAME $DIR"
+SRV_NAME="tftpd"
+EXEC_OPT="-vE $ADDR $PORT $SRV_NAME $WORK_DIR"
 
 check_args(){
-	if [ -z $DIR ]; then
-		DIR="."
+	if [ -z $2 ]; then
+		WORK_DIR="."
+	else
+		WORK_DIR=$2
 	fi
 	return 0
 }
 
 do_start(){
 	check_args
-	nohup $EXEC_NAME $EXEC_OPT &
-	echo "tftpd service started"
+	nohup $DAEMON_NAME $EXEC_OPT > /dev/null 2>&1 &
+	echo "$SRV_NAME service started"
 	exit 0
 }
 
 do_stop(){
-	killall $EXEC_NAME > /dev/null 2>&1
-	echo "tftpd service stopped"
+	pkill -9 $DAEMON_NAME > /dev/null 2>&1
+	echo "$SRV_NAME service stopped"
 	exit 0
 }
 
 is_running(){
-	if [ "`ps -ef | pgrep $EXEC_NAME | wc -l`" -eq "0" ]; then
-		echo "tftpd service not running"
+	PID=$(pgrep $DAEMON_NAME)
+	if [ -z $PID ]; then
+		echo "$SRV_NAME service not running"
 	else
-		echo "tftpd service is running, pid is `ps -ef | pgrep $EXEC_NAME | xargs`"
+		echo "$SRV_NAME service is running, pid is $PID"
 	fi
+	exit 0
 }
 
 case "$1" in
@@ -53,7 +50,7 @@ case "$1" in
 		is_running
 		;;
 	*)
-		echo "Usage: $0 {start|stop|status} <path>"
+		echo "Usage: $0 {start|stop|status} <path, default: current folder>"
 		exit 1
 		;;
 esac
