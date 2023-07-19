@@ -67,7 +67,7 @@ def main():
                 ser.write(chr(0x03).encode())
             time.sleep(1)
 
-            print("[+] Setting bootdelay as 3 second...")
+            print("[+] Setting bootdelay as 3 seconds...")
             ser.write('setenv bootdelay 3\n'.encode())
             time.sleep(1)
             print("[+] Setting asc as 0...")
