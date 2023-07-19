@@ -16,7 +16,7 @@ class Parser(argparse.ArgumentParser):
         parser = argparse.ArgumentParser()
         group = parser.add_mutually_exclusive_group()
         group.add_argument(
-            "-i", "--interface", dest="ifaceName", metavar="<COM>", default=None,
+            "-d", "--interface", dest="ifaceName", metavar="<COM>", default=None,
             help="Specify the serial port device to use (*default=None)"
         )
         parser.add_argument(
@@ -78,30 +78,31 @@ def main():
             time.sleep(1)
 
             if sn is not None:
-                print("[+] Sending set serial number command...")
+                print("[+] Setting serial number as", sn)
                 ser.write('setenv gSerial {s}\n'.format(s=sn).encode())
                 time.sleep(1)
-                ser.write('save\n'.encode())
+                ser.write('saveenv\n'.encode())
                 time.sleep(1)
             else:
                 print("[*] Serial number not defined, skip...")
 
             if mac is not None:
-                print("[+] Sending set mac address command...")
+                print("[+] Setting mac address as", mac)
                 ser.write('setenv ethaddr {m}\n'.format(m=mac).encode())
                 time.sleep(1)
-                ser.write('save\n'.encode())
+                ser.write('saveenv\n'.encode())
                 time.sleep(1)
             else:
                 print("[*] MAC address not defined, skip...")
 
             if reset:
-                print("[+] Sending hard-reboot command...")
-                ser.write('reset\n'.encode())
                 print("[+] Rebooting...")
+                ser.write('reset\n'.encode())
 
-            ser.close()
-            sys.exit()
+            break
+
+    ser.close()
+    sys.exit()
 
 if __name__ == '__main__': 
     try:
