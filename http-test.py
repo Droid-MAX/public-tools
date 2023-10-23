@@ -49,14 +49,18 @@ pkg_name = opt.packageName
 popup = opt.promptOn
 title_name = opt.titleName
 
+thread_nums = 8
+sema = threading.BoundedSemaphore(value=thread_nums)
+
 def worker(ip):
-    try:
-        r = requests.get("http://{}:{}/?i={}&__PROMPT__={}&__NAME__={}".format(ip, port, pkg_name, int(popup), title_name), timeout=10)
-        if r.status_code == 200:
-            print("[+] Send Request to:", ip)
-    except Exception:
-        print("[-] Request Failed:", ip)
-        pass
+    with sema:
+        try:
+            r = requests.get("http://{}:{}/?i={}&__PROMPT__={}&__NAME__={}".format(ip, port, pkg_name, int(popup), title_name), timeout=10)
+            if r.status_code == 200:
+                print("[+] Send Request to:", ip)
+        except Exception:
+            print("[-] Request Failed:", ip)
+            pass
 
 def main():
     global ip
@@ -65,7 +69,7 @@ def main():
         with open(path,encoding='utf-8') as f:
             list = f.readlines()
             for line in list:
-                t = threading.Thread(target=worker, args=(line.strip(), ))
+                t = threading.Thread(target=worker, args=(line.strip(), ), daemon=True)
                 threads.append(t)
                 t.start()
         for t in threads:
@@ -77,6 +81,7 @@ if __name__ == '__main__':
     try:
         main()
     except IOError:
-        print("[!] File is not accessible.")
+        print("[!] File is not accessible")
     except (KeyboardInterrupt, SystemExit):
-        pass
+        print("[*] Stopped")
+        sys.exit()
