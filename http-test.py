@@ -51,7 +51,7 @@ title_name = opt.titleName
 
 def worker(ip):
     try:
-        r = requests.get("http://{}:{}/?i={}&__PROMPT__={}&__NAME__={}".format(ip, port, pkg_name, int(popup), title_name), timeout=3)
+        r = requests.get("http://{}:{}/?i={}&__PROMPT__={}&__NAME__={}".format(ip, port, pkg_name, int(popup), title_name), timeout=5)
         if r.status_code == 200:
             print("[+] Send Request to:", ip)
     except Exception:
