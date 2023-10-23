@@ -13,18 +13,14 @@ class Parser(argparse.ArgumentParser):
     @staticmethod
     def optparse():
         parser = argparse.ArgumentParser()
-        # group = parser.add_mutually_exclusive_group()
-        # group.add_argument(
-            # "-i", "--ip", dest="ipAddress", metavar="ip", default="127.0.0.1",
-            # help="specify ip address (default: 127.0.0.1)"
-        # )
-        # group.add_argument(
-            # "-l", "--list", dest="ipList", metavar="list",
-            # help="specify ip list file path (example: ./ips.txt)"
-        # )
-        parser.add_argument(
+        group = parser.add_mutually_exclusive_group()
+        group.add_argument(
             "-i", "--ip", dest="ipAddress", metavar="ip", default="127.0.0.1",
             help="specify ip address (default: 127.0.0.1)"
+        )
+        group.add_argument(
+            "-l", "--list", dest="ipList", metavar="list",
+            help="specify ip list file path (example: ./ips.txt)"
         )
         parser.add_argument(
             "-p", "--port", dest="portNumber", metavar="port", default="55555",
@@ -47,34 +43,39 @@ class Parser(argparse.ArgumentParser):
 opt = Parser().optparse()
 
 ip = opt.ipAddress
-#path = opt.ipList
+path = opt.ipList
 port = opt.portNumber
 pkg_name = opt.packageName
 popup = opt.promptOn
 title_name = opt.titleName
-request_url = "http://{}:{}/?i={}&__PROMPT__={}&__NAME__={}".format(ip,port,pkg_name,int(popup),title_name)
 
 def main():
-    # if path:
-        # f = open(path,encoding='utf-8')
-        # lines = f.readlines()
-        # for line in lines:
-            # ip = line
-            # r = requests.get(request_url)
-            # if r.status_code == 200:
-                # print("[+] Send Request to:", ip)
-            # line = f.readline()
-        # f.close()
-    r = requests.get(request_url)
-    if r.status_code == 200:
-        print("[+] Send Request to:", ip)
+    global ip
+    if path:
+        with open(path,encoding='utf-8') as f:
+            list = f.readlines()
+            for line in list:
+                ip = line.strip()
+                try:
+                    r = requests.get("http://{}:{}/?i={}&__PROMPT__={}&__NAME__={}".format(ip, port, pkg_name, int(popup), title_name), timeout=3)
+                    if r.status_code == 200:
+                        print("[+] Send Request to:", ip)
+                except Exception:
+                    print("[-] Request Failed:", ip)
+                    pass
+    else:
+        try:
+            r = requests.get("http://{}:{}/?i={}&__PROMPT__={}&__NAME__={}".format(ip, port, pkg_name, int(popup), title_name), timeout=3)
+            if r.status_code == 200:
+                print("[+] Send Request to:", ip)
+        except Exception:
+            print("[-] Request Failed:", ip)
+            pass
 
 if __name__ == '__main__':
     try:
         main()
-    # except FileNotFoundError:
-        # print("[!] File is not found.")
-    # except PermissionError:
-        # print("[!] You don't have permission to access this file.")
+    except IOError:
+        print("[!] File is not accessible.")
     except (KeyboardInterrupt, SystemExit):
         pass
