@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 import sys
-import time
 import argparse
 import requests
 import threading
