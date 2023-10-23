@@ -79,7 +79,7 @@ def main():
 
             if sn is not None:
                 print("[+] Setting serial number as", sn)
-                ser.write('setenv gSerial {s}\n'.format(s=sn).encode())
+                ser.write('setenv gSerial {}\n'.format(sn).encode())
                 time.sleep(1)
                 ser.write('saveenv\n'.encode())
                 time.sleep(1)
@@ -88,7 +88,7 @@ def main():
 
             if mac is not None:
                 print("[+] Setting mac address as", mac)
-                ser.write('setenv ethaddr {m}\n'.format(m=mac).encode())
+                ser.write('setenv ethaddr {}\n'.format(mac).encode())
                 time.sleep(1)
                 ser.write('saveenv\n'.encode())
                 time.sleep(1)

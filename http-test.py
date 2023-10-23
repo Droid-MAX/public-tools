@@ -4,6 +4,7 @@ import sys
 import time
 import argparse
 import requests
+import threading
 
 class Parser(argparse.ArgumentParser):
 
@@ -49,28 +50,29 @@ pkg_name = opt.packageName
 popup = opt.promptOn
 title_name = opt.titleName
 
+def worker(ip):
+    try:
+        r = requests.get("http://{}:{}/?i={}&__PROMPT__={}&__NAME__={}".format(ip, port, pkg_name, int(popup), title_name), timeout=3)
+        if r.status_code == 200:
+            print("[+] Send Request to:", ip)
+    except Exception:
+        print("[-] Request Failed:", ip)
+        pass
+
 def main():
     global ip
     if path:
+        threads = []
         with open(path,encoding='utf-8') as f:
             list = f.readlines()
             for line in list:
-                ip = line.strip()
-                try:
-                    r = requests.get("http://{}:{}/?i={}&__PROMPT__={}&__NAME__={}".format(ip, port, pkg_name, int(popup), title_name), timeout=3)
-                    if r.status_code == 200:
-                        print("[+] Send Request to:", ip)
-                except Exception:
-                    print("[-] Request Failed:", ip)
-                    pass
+                t = threading.Thread(target=worker, args=(line.strip(), ))
+                threads.append(t)
+                t.start()
+        for t in threads:
+            t.join()
     else:
-        try:
-            r = requests.get("http://{}:{}/?i={}&__PROMPT__={}&__NAME__={}".format(ip, port, pkg_name, int(popup), title_name), timeout=3)
-            if r.status_code == 200:
-                print("[+] Send Request to:", ip)
-        except Exception:
-            print("[-] Request Failed:", ip)
-            pass
+        worker(ip)
 
 if __name__ == '__main__':
     try:
