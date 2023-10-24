@@ -57,11 +57,11 @@ def worker(ip):
         try:
             r = requests.get("http://{}:{}/?i={}&__PROMPT__={}&__NAME__={}".format(ip, port, pkg_name, int(popup), title_name), timeout=10)
             if r.status_code == 200:
-                print("[+] Sending Request:", ip)
+                print("[+] Sending Request:", ip, flush=True)
             else:
-                print("[-] Request Failed:", ip)
+                print("[-] Request Failed:", ip, flush=True)
         except Exception:
-            print("[-] Request Failed:", ip)
+            print("[-] Request Failed:", ip, flush=True)
             pass
 
 def main():
