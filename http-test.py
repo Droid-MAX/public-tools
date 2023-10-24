@@ -63,6 +63,8 @@ def worker(ip):
         except Exception:
             print("[-] Request Failed:", ip, flush=True)
             pass
+        except BrokenPipeError:
+            pass
 
 def main():
     global ip
