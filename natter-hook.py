@@ -64,7 +64,7 @@ if __name__ == "__main__":
         exit(1)
 
     if inner_ip and inner_port and outter_ip and outter_port:
-        print(f"Natter: {inner_ip}:{inner_port} -> {outter_ip}:{outter_port}")
+        print(f"[Script] - Upload to server: {protocol}: {inner_ip}:{inner_port} -> {outter_ip}:{outter_port}")
         update_response = update_cloudflare_dns(
             cf_api_token,
             cf_zone_id,
