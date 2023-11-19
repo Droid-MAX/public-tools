@@ -46,10 +46,10 @@ def update_cloudflare_dns(
     }
     try:
         response = requests.put(url, headers=headers, json=data)
-        if response.status_code != 200:
+        if response.status_code == 200:
+            print(f"[Script] - Upload to server: {protocol}: {inner_ip}:{inner_port} -> {outter_ip}:{outter_port}")
+        else:
             print(f"Error updating Cloudflare DNS: HTTP {response.status_code}")
-            print(response.json())
-            return None
         return response.json()
     except requests.exceptions.RequestException as e:
         print(f"Network error occurred: {e}")
@@ -59,21 +59,17 @@ def update_cloudflare_dns(
         return None
 
 if __name__ == "__main__":
-    if not all([cf_api_token, cf_zone_id, cf_record_id]):
+    if not all([cf_api_token, cf_zone_id, cf_record_id, cf_record_name, cf_service_name]):
         print("Missing one or more required variables.")
         exit(1)
 
-    if inner_ip and inner_port and outter_ip and outter_port:
-        print(f"[Script] - Upload to server: {protocol}: {inner_ip}:{inner_port} -> {outter_ip}:{outter_port}")
-        update_response = update_cloudflare_dns(
-            cf_api_token,
-            cf_zone_id,
-            cf_record_id,
-            cf_record_name,
-            f"{outter_ip}:{outter_port}",
-            cf_service_name,
-            "_{protocol}",
-        )
-        print(json.dumps(update_response, indent=4))
-    else:
-        print("Failed to retrieve host and port.")
+    update_response = update_cloudflare_dns(
+        cf_api_token,
+        cf_zone_id,
+        cf_record_id,
+        cf_record_name,
+        f"{outter_ip}:{outter_port}",
+        cf_service_name,
+        "_{protocol}",
+    )
+    print(json.dumps(update_response, indent=4))
