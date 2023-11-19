@@ -5,19 +5,19 @@ import json
 import sys
 import os
 
-# Cloudflare
-cf_api_token='adfh8adf7ygaeruhngiadufhb9dfp98gudfg'
-cf_zone_id='gouiadfyg87argahrd87rghdo8fg7hdfo8g7h'
-cf_record_id='lkw45jh6klrjyhlrisufgh9adfgh7aidybfg'
-cf_record_name='cleverly-named-subdomain'
-cf_service_name='_cleverly-named-service'
-
 # Natter
 protocol=sys.argv[1]
 inner_ip=sys.argv[2]
 inner_port=sys.argv[3]
 outter_ip=sys.argv[4]
 outter_port=sys.argv[5]
+
+# Cloudflare
+cf_api_token='CLOUDFLARE_API_TOKEN'
+cf_zone_id='CLOUDFLARE_ZONE_ID'
+cf_record_id='CLOUDFLARE_RECORD_ID'
+cf_record_name='CLOUDFLARE_RECORD_NAME'
+cf_service_name='_CLOUDFLARE_SERVICE_NAME'
 
 def update_cloudflare_dns(
         api_token, zone_id, record_id, name, content, service, proto, ttl=60
@@ -59,7 +59,7 @@ def update_cloudflare_dns(
         return None
 
 if __name__ == "__main__":
-    if not all([cf_api_token, cf_zone_id, cf_record_id, cf_record_name, cf_service_name]):
+    if not all([cf_api_token, cf_zone_id, cf_record_id]):
         print("Missing one or more required variables.")
         exit(1)
 
