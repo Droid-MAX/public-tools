@@ -98,6 +98,6 @@ if __name__ == "__main__":
             cf_srv_name,
             f"_{protocol}",
         )
-        print(json.dumps(update_response, indent=4))
+        # print(json.dumps(update_response, indent=4))
     except (KeyboardInterrupt, SystemExit):
         sys.exit()
