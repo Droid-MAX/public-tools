@@ -15,9 +15,33 @@ outter_port=sys.argv[5]
 # Cloudflare
 cf_api_token='CLOUDFLARE_API_TOKEN'
 cf_zone_id='CLOUDFLARE_ZONE_ID'
-cf_record_id='CLOUDFLARE_RECORD_ID'
 cf_record_name='CLOUDFLARE_RECORD_NAME'
 cf_service_name='_CLOUDFLARE_SERVICE_NAME'
+
+def get_record_id(api_token, zone_id, record_name):
+    url = (
+        f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
+    )
+    headers = {
+        "Authorization": f"Bearer {api_token}",
+        "Content-Type": "application/json",
+    }
+    try:
+        response = requests.get(url, headers=headers)
+        if not json.loads(response.text)['success']:
+            return None
+        domains = json.loads(response.text)['result']
+        for domain in domains:
+            if record_name == domain['name']:
+                return domain['id']
+        print("Record name is invalid.")
+        exit(1)
+    except requests.exceptions.RequestException as e:
+        print(f"Network error occurred: {e}")
+        return None
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return None
 
 def update_cloudflare_dns(
         api_token, zone_id, record_id, name, content, service, proto, ttl=60
@@ -59,10 +83,11 @@ def update_cloudflare_dns(
         return None
 
 if __name__ == "__main__":
-    if not all([cf_api_token, cf_zone_id, cf_record_id]):
+    if not all([cf_api_token, cf_zone_id, cf_record_name, cf_service_name]):
         print("Missing one or more required variables.")
         exit(1)
 
+    cf_record_id = get_record_id(cf_api_token, cf_zone_id, cf_record_name)
     update_response = update_cloudflare_dns(
         cf_api_token,
         cf_zone_id,
