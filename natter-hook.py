@@ -15,8 +15,9 @@ outter_port=sys.argv[5]
 # Cloudflare
 cf_api_token='CLOUDFLARE_API_TOKEN'
 cf_zone_id='CLOUDFLARE_ZONE_ID'
-cf_record_name='CLOUDFLARE_RECORD_NAME'
-cf_service_name='_CLOUDFLARE_SERVICE_NAME'
+cf_srv_name='_CLOUDFLARE_SERVICE_NAME'
+cf_domain_name='CLOUDFLARE_DOMAIN_NAME'
+cf_record_name=f'{cf_srv_name}._{protocol}.{cf_domain_name}'
 
 def get_record_id(api_token, zone_id, record_name):
     url = (
@@ -83,7 +84,7 @@ def update_cloudflare_dns(
         return None
 
 if __name__ == "__main__":
-    if not all([cf_api_token, cf_zone_id, cf_record_name, cf_service_name]):
+    if not all([cf_api_token, cf_zone_id, cf_srv_name, cf_record_name]):
         print("Missing one or more required variables.")
         exit(1)
     try:
@@ -92,7 +93,7 @@ if __name__ == "__main__":
             cf_api_token,
             cf_zone_id,
             cf_record_id,
-            cf_record_name,
+            cf_domain_name,
             f"{outter_ip}:{outter_port}",
             cf_service_name,
             f"_{protocol}",
