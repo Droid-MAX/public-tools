@@ -95,7 +95,7 @@ if __name__ == "__main__":
             cf_record_name,
             f"{outter_ip}:{outter_port}",
             cf_service_name,
-            "_{protocol}",
+            f"_{protocol}",
         )
         print(json.dumps(update_response, indent=4))
     except (KeyboardInterrupt, SystemExit):
