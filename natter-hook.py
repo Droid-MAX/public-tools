@@ -86,15 +86,17 @@ if __name__ == "__main__":
     if not all([cf_api_token, cf_zone_id, cf_record_name, cf_service_name]):
         print("Missing one or more required variables.")
         exit(1)
-
-    cf_record_id = get_record_id(cf_api_token, cf_zone_id, cf_record_name)
-    update_response = update_cloudflare_dns(
-        cf_api_token,
-        cf_zone_id,
-        cf_record_id,
-        cf_record_name,
-        f"{outter_ip}:{outter_port}",
-        cf_service_name,
-        "_{protocol}",
-    )
-    print(json.dumps(update_response, indent=4))
+    try:
+        cf_record_id = get_record_id(cf_api_token, cf_zone_id, cf_record_name)
+        update_response = update_cloudflare_dns(
+            cf_api_token,
+            cf_zone_id,
+            cf_record_id,
+            cf_record_name,
+            f"{outter_ip}:{outter_port}",
+            cf_service_name,
+            "_{protocol}",
+        )
+        print(json.dumps(update_response, indent=4))
+    except (KeyboardInterrupt, SystemExit):
+        sys.exit()
