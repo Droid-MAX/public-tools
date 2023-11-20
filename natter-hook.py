@@ -95,7 +95,7 @@ if __name__ == "__main__":
             cf_record_id,
             cf_domain_name,
             f"{outter_ip}:{outter_port}",
-            cf_service_name,
+            cf_srv_name,
             f"_{protocol}",
         )
         print(json.dumps(update_response, indent=4))
