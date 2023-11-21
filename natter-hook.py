@@ -9,8 +9,7 @@ import os
 protocol=sys.argv[1]
 inner_ip=sys.argv[2]
 inner_port=sys.argv[3]
-outter_ip=sys.argv[4]
-outter_port=sys.argv[5]
+outter_port=sys.argv[4]
 
 # Cloudflare
 cf_api_token='CLOUDFLARE_API_TOKEN'
@@ -18,6 +17,7 @@ cf_zone_id='CLOUDFLARE_ZONE_ID'
 cf_srv_name='_CLOUDFLARE_SERVICE_NAME'
 cf_domain_name='CLOUDFLARE_DOMAIN_NAME'
 cf_record_name=f'{cf_srv_name}._{protocol}.{cf_domain_name}'
+outter_host='EXAMPLE.COM'
 
 def get_record_id(api_token, zone_id, record_name):
     url = (
@@ -72,7 +72,7 @@ def update_cloudflare_dns(
     try:
         response = requests.put(url, headers=headers, json=data)
         if response.status_code == 200:
-            print(f"[Script] - Upload to server: {protocol}: {inner_ip}:{inner_port} -> {outter_ip}:{outter_port}")
+            print(f"[Script] - Upload to server: {protocol}: {inner_ip}:{inner_port} -> {outter_host}:{outter_port}")
         else:
             print(f"Error updating Cloudflare DNS: HTTP {response.status_code}")
         return response.json()
@@ -94,7 +94,7 @@ if __name__ == "__main__":
             cf_zone_id,
             cf_record_id,
             cf_domain_name,
-            f"{outter_ip}:{outter_port}",
+            f"{outter_host}:{outter_port}",
             cf_srv_name,
             f"_{protocol}",
         )
