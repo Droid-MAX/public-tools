@@ -32,7 +32,7 @@ class Parser(argparse.ArgumentParser):
         )
         parser.add_argument(
             "-m", "--protocol", dest="proto", metavar="protocol", default="tcp",
-            help="specify the protocol, tcp or udp (default: tcp)"
+            help="specify the protocol, 'tcp' or 'udp' (default: tcp)"
         )
         parser.add_argument(
             "-t", "--host", dest="host", metavar="host", required=True,
